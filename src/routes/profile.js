@@ -61,4 +61,48 @@ function validateProfileData (req) {
   })
   return schema.validate(req)
 }
+
+/**
+ * Update user pattern.
+ * @route POST /updatePattern
+ * @param {Object} req.body - The request body.
+ * @param {string} req.body._id - The user's ID.
+ * @param {string} req.body.pattern - The pattern to set.
+ */
+router.post('/updatePattern', async function (req, res) {
+  const { _id, pattern } = req.body
+
+  if (!_id || !pattern) {
+    return res.status(400).send(getErrorResponse('User ID and pattern are required'))
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(404).send(getErrorResponse('Invalid User ID'))
+  }
+
+  try {
+    const user = await User.findOne({ _id })
+
+    if (!user) {
+      return res.status(404).send(getErrorResponse('User not found'))
+    }
+
+    user.pattern = pattern
+    await user.save()
+
+    return res.send(
+      getSuccessResponse(
+        'Pattern updated successfully',
+        _.omit(user.toObject(), ['__v', 'password'])
+      )
+    )
+  } catch (e) {
+    return res.status(500).send(
+      getErrorResponse(
+        `An error occurred while updating the pattern. ${e.message}`
+      )
+    )
+  }
+})
+
 module.exports = router

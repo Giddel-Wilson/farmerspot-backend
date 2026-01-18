@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
     return res.send(getErrorResponse('No User Exists with this email'))
   }
 
-  const validPassword = comparePasswords(req.body.password, user.password)
+  const validPassword = await comparePasswords(req.body.password, user.password)
   if (!validPassword) return res.send(getErrorResponse('Invalid Password'))
 
   return res.send(

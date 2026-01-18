@@ -7,6 +7,7 @@ const admin = require('../routes/admin')
 const order = require('../routes/order')
 const review = require('../routes/review')
 const upload = require('../routes/upload')
+const contact = require('../routes/contact')
 
 /**
  * Function that exports all the routes
@@ -23,4 +24,5 @@ module.exports = function (app) {
   app.use('/api/orders', order)
   app.use('/api/review', review)
   app.use('/api/upload', upload)
+  app.use('/api/contact', contact)
 }

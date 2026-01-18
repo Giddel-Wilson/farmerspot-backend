@@ -38,6 +38,11 @@ const userSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  pattern: {
+    type: String,
+    enum: ['pattern1', 'pattern2', 'pattern3'],
+    default: 'pattern1'
+  },
   location: {
     type: {
       type: String,
@@ -86,9 +91,9 @@ function validateSignUp (req) {
     location: Joi.object()
       .keys({
         type: Joi.string().valid('Point').default('Point'),
-        coordinates: Joi.array().items(Joi.number()).required()
+        coordinates: Joi.array().items(Joi.number()).optional()
       })
-      .required()
+      .optional()
   })
   return schema.validate(req)
 }

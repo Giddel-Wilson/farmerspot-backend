@@ -7,8 +7,19 @@ const { getErrorResponse, getSuccessResponse } = require('../utils/response')
  * Upload single image to Cloudinary
  * @param {File} req.file - Image file
  */
-router.post('/upload', upload.single('image'), async (req, res) => {
-  try {
+router.post('/upload', (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Multer/Cloudinary error:', err)
+      console.error('Error details:', {
+        message: err.message,
+        stack: err.stack,
+        name: err.name,
+        code: err.code
+      })
+      return res.status(500).send(getErrorResponse('Error uploading image: ' + err.message))
+    }
+    
     if (!req.file) {
       return res.status(400).send(getErrorResponse('No image file provided'))
     }
@@ -17,10 +28,7 @@ router.post('/upload', upload.single('image'), async (req, res) => {
       url: req.file.path,
       public_id: req.file.filename
     }))
-  } catch (err) {
-    console.error('Upload error:', err)
-    return res.status(500).send(getErrorResponse('Error uploading image: ' + err.message))
-  }
+  })
 })
 
 /**
