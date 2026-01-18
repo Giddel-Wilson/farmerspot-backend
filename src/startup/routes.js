@@ -15,6 +15,28 @@ const contact = require('../routes/contact')
  */
 
 module.exports = function (app) {
+  // Root endpoint
+  app.get('/', (req, res) => {
+    res.json({
+      success: true,
+      message: 'Farmerspot API is running',
+      version: '1.0.0',
+      endpoints: {
+        auth: '/api/auth',
+        products: '/api/list',
+        search: '/api/search',
+        profile: '/api/profile',
+        cart: '/api/cart',
+        admin: '/api/admin',
+        orders: '/api/orders',
+        reviews: '/api/review',
+        upload: '/api/upload',
+        contact: '/api/contact'
+      },
+      documentation: process.env.NODE_ENV === 'dev' ? '/docs' : 'API documentation available in development mode'
+    })
+  })
+
   app.use('/api/auth', auth)
   app.use('/api/list', list)
   app.use('/api/search', search)
